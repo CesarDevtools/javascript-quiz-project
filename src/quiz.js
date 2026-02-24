@@ -44,9 +44,20 @@ class Quiz {
 
   filterQuestionsByDifficulty(difficulty) {
 
+    if (difficulty >= 1 && difficulty <= 3 ){
+        this.questions = this.questions.filter((questions) => {
+        return questions.difficulty === difficulty
+    })
+    }
   }
 
   averageDifficulty() {
+    
+    const totalSum = this.questions.reduce((acc, curr) => {
+        return acc + curr.difficulty
+    },0);
+
+    return  totalSum / this.questions.length
     
   }
 }
