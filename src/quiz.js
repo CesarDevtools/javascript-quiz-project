@@ -29,7 +29,8 @@ class Quiz {
   }
 
   checkAnswer(answer) {
-    if (answer === answer) {
+    const currentQuestion = this.getQuestion()
+    if (answer === currentQuestion.answer) {
         this.correctAnswers++
     }
   }
