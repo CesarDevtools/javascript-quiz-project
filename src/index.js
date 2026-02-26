@@ -45,7 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ),
     // Add more questions here
   ];
-  const quizDuration = 120; // 120 seconds (2 minutes)
+  let quizDuration = 120; // 120 seconds (2 minutes)
+
 
   /************  QUIZ INSTANCE  ************/
 
@@ -66,12 +67,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeRemainingContainer = document.getElementById("timeRemaining");
   timeRemainingContainer.innerText = `${minutes}:${seconds}`;
 
+
   // Show first question
   showQuestion();
 
   /************  TIMER  ************/
 
   let timer;
+
+
+  timer = setInterval(() => {
+
+    if (quiz.timeRemaining <= 1) {
+      clearInterval(timer)
+      showResults()
+    }
+    quiz.timeRemaining--
+    updateTime()
+  }, 1000)
+
 
   /************  EVENT LISTENERS  ************/
 
@@ -83,12 +97,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // nextButtonHandler() - Handles the click on the next button
   // showResults() - Displays the end view and the quiz results
 
+
+  function updateTime (){
+      const minutes = Math.floor(quiz.timeRemaining / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+
+    // Display the time remaining in the time remaining container
+    const timeRemainingContainer = document.getElementById("timeRemaining");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+  }
+
   function showQuestion() {
+     
     // If the quiz has ended, show the results
     if (quiz.hasEnded()) {
       showResults();
       return;
     }
+    
 
     // Clear the previous question text and question choices
     questionContainer.innerText = "";
@@ -173,4 +201,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Update the result container (div#result) inner text to show the number of correct answers out of total questions
     resultContainer.innerText = `You scored ${quiz.correctAnswers} out of ${questions.length} correct answers!`; // This value is hardcoded as a placeholder
   }
+
+  const restarButton = document.querySelector("#restartButton")
+
+  restarButton.addEventListener("click", (e) => {
+
+    endView.style.display = "none";
+    quizView.style.display = "block"
+    quiz.currentQuestionIndex = 0;
+    quiz.correctAnswers = 0;
+    quiz.shuffleQuestions();
+    showQuestion();
+    quiz.timeRemaining = 120;
+    updateTime()
+
+  })
+
 });
